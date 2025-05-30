@@ -276,19 +276,15 @@ impl Frame<'_> {
             f,
             "{:>2}: {}{}{}",
             i,
-            style_if_possible(self.metadata.target(), self.theme.target),
-            style_if_possible("::", self.theme.target),
-            style_if_possible(self.metadata.name(), self.theme.target),
+            style(self.metadata.target(), self.theme.target),
+            style("::", self.theme.target),
+            style(self.metadata.name(), self.theme.target),
         )
     }
 
     fn print_fields(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         if !self.fields.is_empty() {
-            write!(
-                f,
-                " with {}",
-                style_if_possible(self.fields, self.theme.fields)
-            )?;
+            write!(f, " with {}", style(self.fields, self.theme.fields))?;
         }
 
         Ok(())
@@ -303,8 +299,8 @@ impl Frame<'_> {
             write!(
                 f,
                 "\n    at {}:{}",
-                style_if_possible(file, self.theme.file),
-                style_if_possible(lineno, self.theme.line_number),
+                style(file, self.theme.file),
+                style(lineno, self.theme.line_number),
             )?;
         } else {
             write!(f, "\n    at <unknown source file>")?;
@@ -341,7 +337,7 @@ impl Frame<'_> {
                     cur_line_no.to_string(),
                     line.unwrap()
                 )?;
-                write!(f, "\n{}", style_if_possible(&buf, self.theme.active_line))?;
+                write!(f, "\n{}", style(&buf, self.theme.active_line))?;
                 buf.clear();
             } else {
                 write!(f, "\n{:>8} │ {}", cur_line_no, line.unwrap())?;
@@ -385,7 +381,7 @@ impl fmt::Display for ColorSpanTrace<'_> {
 
 /// Apply owo_colors style if possible. Returns a string with/without ANSI
 /// escape symbols.
-fn style_if_possible<S>(str: S, style: Style) -> String
+fn style<S>(str: S, style: Style) -> String
 where
     S: ToString + std::fmt::Display,
 {
